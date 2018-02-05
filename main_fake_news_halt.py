@@ -55,47 +55,6 @@ Standard way of making a max-heap in python is stocking -elt in a min-heap.
 def GetMaxInfectionValueAtT(heap_infection, t):
     return -heap_infection[t][0][0]
 
-##%% Main DP algo
-#
-#def OptimalHalting(sum_infection, heap_infection, budget):
-#    t_infinity = len(heap_infection)
-#    n_infections = len(heap_infection[0])
-#    tab_selection = [-1]*n_infections
-#    
-#    policy = np.array([[-1]*t_infinity] for _ in xrange(budget))
-#    
-#    # Pick the best choices, time by time
-#    for t in xrange(t_infinity):
-#        choices_at_t = [[]]*budget
-#        # Get the best choices at time t
-#        for i_budget in xrange(budget):
-#            # Check heap not empty
-#            if heap_infection[t]:
-#                choices_at_t[i_budget] = heapq.heappop(heap_infection[t])
-#            else:
-#                print "All nodes selected at time {} during r-best selection.".format(t)
-#                return
-#        # Compute the conflicts
-#        conflicts = [heap_elt[1] for heap_elt in choices_at_t if tab_selection[heap_elt[1]] != 0]
-#        
-#        # Solve the conflicts
-#        while conflicts:
-#            curr_conflict = conflicts.pop()
-#            infection_conflict = curr_conflict
-#            t_conflict = tab_selection[infection_conflict]
-#            value_next_best_t = GetMaxInfectionValueAtT(heap_infection, t)
-#            value_next_best_t_conflict = GetMaxInfectionValueAtT(heap_infection, t_conflict)
-#            
-#            value_switch = value_next_best_t_conflict - ValueChoice(
-#                            infection_conflict, t, tab_selection, sum_infection)
-#            
-#            if value_next_best_t >= value_switch:
-#                # No switch
-#                tab_selection[infection_conflict]
-#        
-#    
-#    return
-
 #%%
 def HasBeenChosen(i_infection, tab_selection):
     return tab_selection[i_infection] != -1
