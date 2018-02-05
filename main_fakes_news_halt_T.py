@@ -101,6 +101,34 @@ class TestCore(unittest.TestCase):
         self.assertEqual(i_infection, 0)
         self.assertEqual(val, -3)
         
+    def testGain(self):
+        sum_infections = np.array([[10, 6, 6, 6],
+                                   [20, 14, 10, 4],
+                                   [40, 40, 40, 0],
+                                   [10, 8, 4, 4], 
+                                   [10, 4, 4, 4]])
+        n_infection = len(sum_infections)
+        t_max = len(sum_infections[0, :]) 
+        print "t_max: {}".format(t_max)
+        heap_infection = [[] for _ in xrange(t_max)]
+        heap_infection[t_max - 1] = [[-4, 0, 1], [0, 0, 2], [-4, 0, 3], [-4, 0, 4]]
+        heap_infection[t_max - 2] = [[-4, 1, 0], [-10, 0, 1], [-4, 0, 3], [-4, 0, 4]]
+        heapq.heapify(heap_infection[t_max - 1])
+        heapq.heapify(heap_infection[t_max - 2])
+        dico_conflict = {(1, 2) : (2, 3)}
+        tab_selection = [3, -1, 2, -1, -1]         
+        sol_gains = [-4, -14, -10, -8, -4]
+        t = 1
+        for i_infection in xrange(n_infection):
+            print 
+            print "i_infection : {}".format(i_infection)
+            print dico_conflict
+            self.assertEqual(Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_selection), 
+                             sol_gains[i_infection])
+        self.assertTrue((0, 1) in dico_conflict)
+        self.assertTrue(dico_conflict[(0, 1)] == (1, 3))
+        self.assertTrue((2, 1) in dico_conflict)
+        self.assertTrue(dico_conflict[(2, 1)] == (1, 2))        
         
         
 if __name__ == '__main__':

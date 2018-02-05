@@ -123,23 +123,26 @@ This function calculates how much we gain by killing an epidemic i_infection at
 time t. In particular, it resolves the eventual conflicts as needed.
 """
 def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_selection):
-    if not(HasBeenChosen(i_infection)):
-        return sum_infections[i_infection, t]
+    if not(HasBeenChosen(i_infection, tab_selection)):
+        return -sum_infections[i_infection, t]
     else:
         t_conflict = tab_selection[i_infection]
         # Remove the already chosen infections from the heap
-        while (heap_infection[t_conflict] and HasBeenChosen(heap_infection[t_conflict][0][1])):
+        while (heap_infection[t_conflict] and HasBeenChosen(heap_infection[t_conflict][0][2], tab_selection)):
             heapq.heappop(heap_infection[t_conflict])
         
         # This infection has therefore never been chosen
-        [gain_conflict, i_conflict] = heap_infection[t_conflict][0]
-        
+        [gain_conflict, n_conflict, i_conflict] = heap_infection[t_conflict][0]
+
         # Make sure the infection at the time of conflict is not the one we're considering killing
         if i_conflict == i_infection:
-            [gain_conflict, i_conflict] = heap_infection[t_conflict][1]
+            [gain_conflict, n_conflict, i_conflict] = heap_infection[t_conflict][1]
         
-        gain = sum_infections[i_infection, t] - sum_infections[i_infection, t_conflict] + gain_conflict
-        
+        gain = -(sum_infections[i_infection, t] - sum_infections[i_infection, t_conflict]) + gain_conflict
+#        print "gain conflict : {}".format(gain_conflict)
+#        print "i : {}, t : {}, sum : {}".format(i_infection, t, sum_infections[i_infection, t])
+#        print "i_conflict : {}, t_conflict : {}, sum_conflict : {}".format(i_conflict, t_conflict, sum_infections[i_infection, t_conflict])
+
         # add the new conflict if this is selected
         dico_conflict[(i_infection, t)] = (i_conflict, t_conflict)
         
