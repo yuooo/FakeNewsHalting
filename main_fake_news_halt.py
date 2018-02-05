@@ -12,19 +12,12 @@ import numpy as np
 
 """
 tab_selection[k_infection] = 
-    - 0 if never selected
+    - -1 if never selected
     - t_selection if selected
 """
 
 def EmptyFunc():
     return 0
-    
-def IsAlreadySelected(k_infection, tab_selection):
-    return tab_selection[k_infection] != 0
-    
-def ValueChoice(k_infection, t_time, tab_selection, sum_infection):
-    t_selection = tab_selection[k_infection]
-    return sum_infection[k_infection, t_selection] - sum_infection[k_infection, t_time]
     
 def CreateSum(ikt):
     k = len(ikt)
@@ -34,26 +27,11 @@ def CreateSum(ikt):
         for i_k in range(k):
             sum_infection[i_k, i_t + 1] = sum_infection[i_k, i_t] + ikt[i_k][i_t]
     return sum_infection
- 
-"""
-heap_infection[t] = heap of [-total_number_of_infected_people_until_time_t, k_infection]
-"""   
-def SortAll(sum_infection):
-    t_infinity = len(sum_infection[0,:])
-    n_infections = len(sum_infection)
-    heap_infection = [[[-sum_infection[i_infection, t], i_infection] 
-                        for i_infection in xrange(n_infections)] 
-                        for t in xrange(t_infinity)]
-    for t in xrange(t_infinity):
-        heapq.heapify(heap_infection[t])
-#        print heap_infection
-    return heap_infection
+    
 
 """ 
 Standard way of making a max-heap in python is stocking -elt in a min-heap.
 """
-def GetMaxInfectionValueAtT(heap_infection, t):
-    return -heap_infection[t][0][0]
 
 #%%
 def HasBeenChosen(i_infection, tab_selection):
@@ -107,6 +85,9 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
         
         return gain
 
+"""
+heap_infection[t] = heap of [-total_number_of_infected_people_until_time_t, n_conflicts, i_infection]
+"""   
 def PopHeapUntilNotChosenAtT(heap, tab_selection, t_curr):
     while (heap and 0 <= tab_selection[heap[0][2]] <= t_curr):
         heapq.heappop(heap)

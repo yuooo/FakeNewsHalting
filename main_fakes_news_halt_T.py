@@ -24,26 +24,7 @@ class TestHelpers(unittest.TestCase):
             for i_col in range(t):
 #                print i_lig, i_col
                 self.assertEqual(sol[i_lig][i_col], pot_sol[i_lig][i_col])
-                
-    def testSortAll(self):
-        sums = np.array([[0,3,7,7,10], [0,0,0,0,20], [0,0,0,4,6], [0,2,10,17,18]])
-        heap_infections = SortAll(sums)
-        maxima = [0, 3, 10, 17, 20]
-        origin = [0,0,3,3,1]
-        second_max = [0, 2, 7, 7, 18]
-        for t in range(len(sums[0])):
-            self.assertEqual(heap_infections[t][0][0], -maxima[t])
-            self.assertEqual(heap_infections[t][0][1], origin[t])
-#            print heap_infections[t][0], -maxima[t]
-            self.assertEqual(heap_infections[t][1][0], -second_max[t])
             
-    def testGetMaxInfectionValueAtT(self):
-        sums = np.array([[0,3,7,7,10], [0,0,0,0,20], [0,0,0,4,6], [0,2,10,17,18]])
-        heap_infections = SortAll(sums)
-        maxt = [GetMaxInfectionValueAtT(heap_infections, t) for t in xrange(len(sums[0]))]
-        maxima = [0, 3, 10, 17, 20]
-        for t in range(len(sums[0])):
-            self.assertEqual(maxt[t], maxima[t])
 
     def testHasBeenChosen(self):
         tab_selection = [0, -1, 3, -1]
