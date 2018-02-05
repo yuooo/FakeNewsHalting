@@ -111,12 +111,12 @@ def PopHeapUntilNotChosenAtT(heap, tab_selection, t_curr):
     while (heap and 0 <= tab_selection[heap[0][2]] <= t_curr):
         heapq.heappop(heap)
 
-def OptimalHalting(sum_infections, dico_conflict, budget):
+def OptimalHalting(sum_infections, budget):
     # Init
     t_max = len(sum_infections[0,:])
     n_infection = len(sum_infections)
     heap_infection = [[] for _ in range(t_max)]
-    tab_selection = [-1]*t_max
+    tab_selection = [-1]*n_infection
     total_gain = 0
     gains = np.zeros((n_infection, t_max))
     dico_conflict = {}
@@ -129,13 +129,15 @@ def OptimalHalting(sum_infections, dico_conflict, budget):
             n_conflicts = NConflicts(dico_conflict, i_infection, t)
             
         # Fill the heap at time t
-        heap_infection[t] = [[- gains[i, t], n_conflicts, i] for i in xrange(n_infection)]
+        heap_infection[t] = [[gains[i, t], n_conflicts, i] for i in xrange(n_infection)]
         heapq.heapify(heap_infection[t])
         
         # Kill budget epidemics
         for i_budget in xrange(budget):
             # Get best infection to kill
             [val_best_t, n_conflicts_t, i_best_t] = heapq.heappop(heap_infection[t])
+            tab_selection[i_best_t] = t
+            total_gain +=val_best_t
             
             # Update the table of selected infections to incorporate the conflicts
             l_conflict = GetConflicts(dico_conflict, i_best_t, t)
@@ -150,13 +152,18 @@ def OptimalHalting(sum_infections, dico_conflict, budget):
                 
                 # Make sure the values are still up-to-date
                 while heap_infection[t_1]:
-                    [val_best_t_1, n_conflicts_t_1 , i_best_t_1] = heap_infection[t_1]
+                    [val_best_t_1, n_conflicts_t_1, i_best_t_1] = heap_infection[t_1][0]
                     updated_val = Gain(i_best_t_1, t_1, sum_infections, dico_conflict, heap_infection, tab_selection)
                     if updated_val == val_best_t_1:
                         break
                     else :
                         heapq.heapreplace(heap_infection[t_1], 
                                           [updated_val, NConflicts(dico_conflict, i_best_t_1, t_1) , i_best_t_1])
+    
+#    # Compute total_gain
+#    for i_infection, time in enumerate(tab_selection):
+#        if time != -1:
+#            total_gain -= sum_infections[i_infection, time]
                                           
     return total_gain, tab_selection
 
