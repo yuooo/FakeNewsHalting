@@ -23,15 +23,11 @@ def CreateSum(ikt):
     k = len(ikt)
     t = len(ikt[0])
     sum_infection = np.array([[0]*(t+1) for _ in range(k)])
-    for i_t in range(t):
+    for i_t in reversed(range(t)):
         for i_k in range(k):
-            sum_infection[i_k, i_t + 1] = sum_infection[i_k, i_t] + ikt[i_k][i_t]
+            sum_infection[i_k, i_t] = sum_infection[i_k, i_t + 1] + ikt[i_k][i_t]
     return sum_infection
     
-
-""" 
-Standard way of making a max-heap in python is stocking -elt in a min-heap.
-"""
 
 #%%
 def HasBeenChosen(i_infection, tab_selection):
@@ -86,7 +82,8 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
         return gain
 
 """
-heap_infection[t] = heap of [-total_number_of_infected_people_until_time_t, n_conflicts, i_infection]
+heap_infection[t] = heap of [-total_number_of_infected_people_until_time_t, n_conflicts, i_infection].
+Standard way of making a max-heap in python is stocking -elt in a min-heap.
 """   
 def PopHeapUntilNotChosenAtT(heap, tab_selection, t_curr):
     while (heap and 0 <= tab_selection[heap[0][2]] <= t_curr):
@@ -148,5 +145,28 @@ def OptimalHalting(sum_infections, budget):
                                           
     return total_gain, tab_selection
 
+#%% Greedy algo to compare
+def MaxAndMaxIndex(l):
+    max_val = max(l)
+    max_idx = l.index(max_val)
+    return max_idx, max_val
 
+def GreedyHalting(sum_infections, budget):
+    # Init
+    t_max = len(sum_infections[0,:])
+    n_infection = len(sum_infections)
+    total_gain = 0
+    tab_selection = [-1]*n_infection
+    
+    # core
+    for t in range(t_max):
+        heapt = [[-sum_infections[k, t], k] for k in xrange(n_infection)]
+        heapq.heapify(heapt)
+        for _ in xrange(budget):
+            [gain, i_infection] = heapq.heappop(heapt)
+            while HasBeenChosen(i_infection, tab_selection):
+                [gain, i_infection] = heapq.heappop(heapt)
+            tab_selection[i_infection] = t
+            total_gain += gain
+    return total_gain, tab_selection
    

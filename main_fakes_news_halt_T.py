@@ -16,8 +16,9 @@ class TestImport(unittest.TestCase):
 class TestHelpers(unittest.TestCase):
     def testCreateSum(self):
         ikt = [[2,5,0,3], [0,0,0,10], [0,0,4,2], [20,0,0,0], [2,8,7,7], [0,20,0,0], [0,2,4,8]]
-        sol = [[0,2,7,7,10], [0,0,0,0,10], [0,0,0,4,6], [0,20,20,20,20], [0,2,10,17,24], [0,0,20,20,20], [0,0,2,6,14]]
+        sol = [[10,8,3,3, 0], [10,10,10,10, 0], [6,6,6,2, 0], [20,0,0,0, 0], [24,22,14,7, 0], [20,20,0,0, 0], [14,14,12,8, 0]]
         pot_sol = CreateSum(ikt)    
+#        print pot_sol
         k = len(sol)
         t = len(sol[0])
         for i_lig in range(k):
@@ -124,6 +125,22 @@ class TestCore(unittest.TestCase):
         tab_sol = [3, 0, 2, 1, -1]
 #        print gain
 #        print tab
+        self.assertEqual(gain, gain_sol)
+        self.assertListEqual(tab, tab_sol)
+        
+    
+    def testGreedyHalting(self):
+        sum_infections = np.array([[10, 6, 6, 6],
+                                   [20, 14, 10, 4],
+                                   [40, 40, 40, 0],
+                                   [10, 8, 4, 4], 
+                                   [10, 4, 4, 4]])
+        budget = 1
+        gain, tab = GreedyHalting(sum_infections, budget)
+#        print gain, tab
+        gain_sol = -(40 + 14 + 6 + 4)
+        tab_sol = [2, 1, 0, 3, -1]
+        
         self.assertEqual(gain, gain_sol)
         self.assertListEqual(tab, tab_sol)
         
