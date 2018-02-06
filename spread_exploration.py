@@ -8,6 +8,7 @@ Created on Mon Jan 29 11:41:02 2018
 import matplotlib.pyplot as plt
 import math
 import numpy as np
+import time
 
 #%%
 data = []
@@ -78,3 +79,33 @@ print res
 
 #%%
 print sum(data), len(data)
+
+#%%
+start = time.time()
+is_first_line = True
+n_lines = 0
+max_total = -1
+n_infections = 0
+data2 = [[]]
+with open("spreaddata.csv", "r") as input_file: 
+    for line in input_file :
+        n_lines += 1
+        if is_first_line:
+            is_first_line = False
+            continue
+        timestamp, _ = map(float, line.split(','))
+        if timestamp == 0:
+            n_infections+= 1
+            data2.append([])
+        data2[n_infections].append(timestamp)
+        max_total = max(max_total, timestamp)
+end = time.time()
+        
+print max_total, n_lines, n_infections
+print "it took {} s.".format(end- start)
+
+#%%
+print max(data), max(max(data2))
+
+#%%
+
