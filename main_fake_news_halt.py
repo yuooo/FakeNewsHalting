@@ -23,8 +23,8 @@ def CreateSum(ikt):
     k = len(ikt)
     t = len(ikt[0])
     sum_infection = np.array([[0]*(t+1) for _ in range(k)])
-    for i_t in reversed(range(t)):
-        for i_k in range(k):
+    for i_k in range(k):
+        for i_t in reversed(range(t)):
             sum_infection[i_k, i_t] = sum_infection[i_k, i_t + 1] + ikt[i_k][i_t]
     return sum_infection
     
@@ -61,7 +61,7 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
     else:
         t_conflict = tab_selection[i_infection]
         # Remove the already chosen infections from the heap
-        while (heap_infection[t_conflict] and HasBeenChosen(heap_infection[t_conflict][0][2], tab_selection)):
+        while (heap_infection[t_conflict] and 0 <= tab_selection[heap_infection[t_conflict][0][2]] <= t_conflict):
             heapq.heappop(heap_infection[t_conflict])
         
         # This infection has therefore never been chosen
@@ -101,6 +101,8 @@ def OptimalHalting(sum_infections, budget):
     
     # Compute from the end
     for t in reversed(range(t_max)):
+        if ((t % 100) == 0):
+            print "t: {}".format(t)
         # Compute all gains at time t
         for i_infection in range(n_infection):
             gains[i_infection, t] = Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_selection)
@@ -115,7 +117,7 @@ def OptimalHalting(sum_infections, budget):
             # Get best infection to kill
             [val_best_t, n_conflicts_t, i_best_t] = heapq.heappop(heap_infection[t])
             tab_selection[i_best_t] = t
-            total_gain +=val_best_t
+            total_gain += val_best_t
             
             # Update the table of selected infections to incorporate the conflicts
             l_conflict = GetConflicts(dico_conflict, i_best_t, t)
@@ -146,11 +148,6 @@ def OptimalHalting(sum_infections, budget):
     return total_gain, tab_selection
 
 #%% Greedy algo to compare
-def MaxAndMaxIndex(l):
-    max_val = max(l)
-    max_idx = l.index(max_val)
-    return max_idx, max_val
-
 def GreedyHalting(sum_infections, budget):
     # Init
     t_max = len(sum_infections[0,:])

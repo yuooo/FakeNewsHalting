@@ -105,7 +105,7 @@ print max_total, n_lines, n_infections
 print "it took {} s.".format(end- start)
 
 #%%
-print max(data), max(max(data2))
+print max(data), max(max(data2[:][-10:]))
 
 #%%
 

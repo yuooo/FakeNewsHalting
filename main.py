@@ -56,10 +56,48 @@ Ikt = CreateSum(ikt)
 end = time.time()
 print "Creating the partial sums took {} s.".format(end - start)
 
-#%% 
-print Ikt
-print sum(data[0])
-print sum(ikt[0])
-print sum(ikt[1])
-print ikt[1, :20]
-print Ikt[1, :20]
+#%%  
+budget = 1
+
+start = time.time()
+gain_optimal, tab_optimal = OptimalHalting(Ikt, budget)
+end = time.time()
+print "Optimal Halting took {} s.".format(end - start)
+print "Optimal had a gain of: {}".format(gain_optimal)
+
+start = time.time()
+gain_greedy, tab_greedy = GreedyHalting(Ikt, budget)
+end = time.time()
+print "Greedy Halting took {} s.".format(end - start)
+print "Greedy had a gain of: {}".format(gain_greedy)
+
+#%%
+
+def ComputeTotal(tab, Ikt):
+    gain = 0
+    for i in range(len(tab)):
+        gain += Ikt[i, tab[i]]
+    return gain
+print ComputeTotal(tab_optimal, Ikt), gain_optimal
+print ComputeTotal(tab_greedy, Ikt), gain_greedy
+
+#%%
+#for i in range(len(tab_optimal)):
+#    if (tab_optimal[i], tab_greedy[i]) != (-1, -1):
+#        print tab_optimal[i], tab_greedy[i]
+
+#%%
+a = [elt for elt in tab_optimal if elt != -1]
+b = [elt for elt in tab_greedy if elt != -1]
+a.sort()
+b.sort()
+
+error_a = 0
+error_b = 0
+for i in range(t_max):
+    if a[i] != i :
+        error_a += 1
+    if b[i] != i:
+        error_b += 1
+        
+print error_a, error_b
