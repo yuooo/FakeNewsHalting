@@ -81,23 +81,3 @@ def ComputeTotal(tab, Ikt):
 print ComputeTotal(tab_optimal, Ikt), gain_optimal
 print ComputeTotal(tab_greedy, Ikt), gain_greedy
 
-#%%
-#for i in range(len(tab_optimal)):
-#    if (tab_optimal[i], tab_greedy[i]) != (-1, -1):
-#        print tab_optimal[i], tab_greedy[i]
-
-#%%
-a = [elt for elt in tab_optimal if elt != -1]
-b = [elt for elt in tab_greedy if elt != -1]
-a.sort()
-b.sort()
-
-error_a = 0
-error_b = 0
-for i in range(t_max):
-    if a[i] != i :
-        error_a += 1
-    if b[i] != i:
-        error_b += 1
-        
-print error_a, error_b

@@ -139,11 +139,6 @@ def OptimalHalting(sum_infections, budget):
                     else :
                         heapq.heapreplace(heap_infection[t_1], 
                                           [updated_val, NConflicts(dico_conflict, i_best_t_1, t_1) , i_best_t_1])
-    
-#    # Compute total_gain
-#    for i_infection, time in enumerate(tab_selection):
-#        if time != -1:
-#            total_gain -= sum_infections[i_infection, time]
                                           
     return total_gain, tab_selection
 
