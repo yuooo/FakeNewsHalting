@@ -34,26 +34,26 @@ class TestHelpers(unittest.TestCase):
             self.assertEqual(HasBeenChosen(i, tab_selection), sol[i])
         
     def testGetConflicts(self):
-        dico_conflict = {(1, 3) : (2, 4), 
-                         (1, 2) : (2, 4), 
-                         (3, 2) : (2, 3), 
-                         (1, 1) : (2, 4), 
-                         (2, 1) : (3, 2),
-                         (3, 1) : (2, 3)}
-        l_1_3 = [(2, 4)]
+        dico_conflict = {(1, 3) : (2, 4, 1), 
+                         (1, 2) : (2, 4, 1), 
+                         (3, 2) : (2, 3, 1), 
+                         (1, 1) : (2, 4, 1), 
+                         (2, 1) : (3, 2, 2),
+                         (3, 1) : (2, 3, 1)}
+        l_1_3 = [(2, 4, 1)]
         l_1_4 = []
-        l_2_1 = [(3, 2), (2, 3)]
+        l_2_1 = [(3, 2, 2), (2, 3, 1)]
         self.assertListEqual(l_1_3, GetConflicts(dico_conflict, 1, 3))
         self.assertListEqual(l_1_4, GetConflicts(dico_conflict, 1, 4))
         self.assertListEqual(l_2_1, GetConflicts(dico_conflict, 2, 1))
         
     def testNConflicts(self):
-        dico_conflict = {(1, 3) : (2, 4), 
-                         (1, 2) : (2, 4), 
-                         (3, 2) : (2, 3), 
-                         (1, 1) : (2, 4), 
-                         (2, 1) : (3, 2),
-                         (3, 1) : (2, 3)}
+        dico_conflict = {(1, 3) : (2, 4, 1), 
+                         (1, 2) : (2, 4, 1), 
+                         (3, 2) : (2, 3, 1), 
+                         (1, 1) : (2, 4, 1), 
+                         (2, 1) : (3, 2, 2),
+                         (3, 1) : (2, 3, 1)}
         n_1_3 = 1
         n_1_4 = 0
         n_2_1 = 2
@@ -97,7 +97,7 @@ class TestCore(unittest.TestCase):
         heap_infection[t_max - 2] = [[-4, 1, 0], [-10, 0, 1], [-4, 0, 3], [-4, 0, 4]]
         heapq.heapify(heap_infection[t_max - 1])
         heapq.heapify(heap_infection[t_max - 2])
-        dico_conflict = {(1, 2) : (2, 3)}
+        dico_conflict = {(1, 2) : (2, 3, 1)}
         tab_selection = [3, -1, 2, -1, -1]         
         sol_gains = [-4, -14, -10, -8, -4]
         t = 1
@@ -108,9 +108,9 @@ class TestCore(unittest.TestCase):
             self.assertEqual(Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_selection), 
                              sol_gains[i_infection])
         self.assertTrue((0, 1) in dico_conflict)
-        self.assertTrue(dico_conflict[(0, 1)] == (1, 3))
+        self.assertTrue(dico_conflict[(0, 1)] == (1, 3, 1))
         self.assertTrue((2, 1) in dico_conflict)
-        self.assertTrue(dico_conflict[(2, 1)] == (1, 2))    
+        self.assertTrue(dico_conflict[(2, 1)] == (1, 2, 2))    
         
     
     def testOptimalHalting(self):

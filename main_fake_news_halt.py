@@ -41,16 +41,14 @@ def GetConflicts(dico_conflict, i_infection, t):
     l_conflict = []
     curr_i, curr_t = i_infection, t
     while (curr_i, curr_t) in dico_conflict:
-        curr_i, curr_t = dico_conflict[(curr_i, curr_t)]
-        l_conflict.append((curr_i, curr_t))
+        curr_i, curr_t, n_conflict = dico_conflict[(curr_i, curr_t)]
+        l_conflict.append((curr_i, curr_t, n_conflict))
     return l_conflict
     
 def NConflicts(dico_conflict, i_infection, t):
     n_conflict = 0
-    curr_i, curr_t = i_infection, t
-    while (curr_i, curr_t) in dico_conflict:
-        curr_i, curr_t = dico_conflict[(curr_i, curr_t)]
-        n_conflict += 1
+    if (i_infection, t) in dico_conflict:
+        dummy1, dummy2, n_conflict = dico_conflict[(i_infection, t)]
     return n_conflict
     
 #%%
@@ -64,6 +62,8 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
         return -sum_infections[i_infection, t]
     else:
         t_conflict = tab_selection[i_infection]
+        if t_conflict <= t:
+            return 0
         # Remove the already chosen infections from the heap
         while (heap_infection[t_conflict] and 0 <= tab_selection[heap_infection[t_conflict][0][2]] <= t_conflict):
             heapq.heappop(heap_infection[t_conflict])
@@ -81,7 +81,11 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
 #        print "i_conflict : {}, t_conflict : {}, sum_conflict : {}".format(i_conflict, t_conflict, sum_infections[i_infection, t_conflict])
 
         # add the new conflict if this is selected
-        dico_conflict[(i_infection, t)] = (i_conflict, t_conflict)
+        if (i_conflict, t_conflict) in dico_conflict:
+            dummy1, dummy2, n_conflicts_at_t_conflict = dico_conflict[(i_conflict, t_conflict)]
+            dico_conflict[(i_infection, t)] = (i_conflict, t_conflict, n_conflicts_at_t_conflict + 1)
+        else:
+            dico_conflict[(i_infection, t)] = (i_conflict, t_conflict, 1)
         
         return gain
 
@@ -125,7 +129,7 @@ def OptimalHalting(sum_infections, budget):
             # Update the table of selected infections to incorporate the conflicts
             l_conflict = GetConflicts(dico_conflict, i_best_t, t)
             for conf in l_conflict:
-                i_conf, t_conf = conf
+                i_conf, t_conf, _ = conf
                 tab_selection[i_conf] = t_conf
         
             # Update all the heaps
