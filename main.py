@@ -1,5 +1,5 @@
 import os
-os.chdir("/Users/jessicahoffmann/Desktop/Cours/UTAustin/Research/FakeNews")
+#os.chdir("/Users/jessicahoffmann/Desktop/Cours/UTAustin/Research/FakeNews")
 from main_fake_news_halt import *
 import time
 import math
