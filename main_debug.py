@@ -141,7 +141,7 @@ def OptimalHalting(sum_infections, budget):
                 
                 # Make sure the values are still up-to-date
                 while heap_infection[t_1]:
-                print "OptimalHalting: update maximum until stable at {} called for budget {}.".format(t, i_budget)
+                    print "OptimalHalting: update maximum until stable at {} called for budget {}.".format(t, i_budget)
                     [val_best_t_1, n_conflicts_t_1, i_best_t_1] = heap_infection[t_1][0]
                     updated_val = Gain(i_best_t_1, t_1, sum_infections, dico_conflict, heap_infection, tab_selection)
                     if updated_val == val_best_t_1:
