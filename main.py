@@ -66,8 +66,9 @@ print "Creating the partial sums took {} s.".format(end - start)
 #print Ikt[:, 131]
 
 #%%  
-budgets = np.linspace(1, (n_infections) // t_max, 20)
+#budgets = np.linspace(1, (n_infections) // t_max, 20)
 #budget = 10
+budgets = [1]
 res_optimal = []
 res_greedy = []
 
