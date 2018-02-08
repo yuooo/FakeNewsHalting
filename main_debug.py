@@ -204,7 +204,7 @@ print "Max total: {}".format(max_total)
 
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
-tau = 10000
+tau = 3600
 t_max = int(math.ceil(max_total/tau))
 print "t_max: {}".format(t_max)
 
