@@ -47,7 +47,9 @@ def NConflicts(dico_conflict, i_infection, t):
     n_conflict = 0
     curr_i, curr_t = i_infection, t
     while (curr_i, curr_t) in dico_conflict:
+        print "creating conflict: infection {} at {}.".format(curr_i, curr_t)
         curr_i, curr_t = dico_conflict[(curr_i, curr_t)]
+        print "resolving conflict: infection {} at {}.".format(curr_i, curr_t)
         n_conflict += 1
     return n_conflict
     
