@@ -65,6 +65,9 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
         return -sum_infections[i_infection, t]
     else:
         t_conflict = tab_selection[i_infection]
+        if t_conflict <= t:
+            return 0
+            
         # Remove the already chosen infections from the heap
         while (heap_infection[t_conflict] and 0 <= tab_selection[heap_infection[t_conflict][0][2]] <= t_conflict):
             print "Gain while loop of pop() on infection {} at {} called, checking the heap at {}.".format(i_infection, t, t_conflict)
@@ -201,7 +204,7 @@ print "Max total: {}".format(max_total)
 
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
-tau = 100000
+tau = 10000
 t_max = int(math.ceil(max_total/tau))
 print "t_max: {}".format(t_max)
 
@@ -237,8 +240,9 @@ print "Creating the partial sums took {} s.\n\n".format(end - start)
 #print Ikt[:, 131]
 
 #%%  
-budgets = np.linspace(1, (n_infections) // t_max, 20)
+#budgets = np.linspace(1, (n_infections) // t_max, 20)
 #budget = 10
+budgets = [1]
 res_optimal = []
 res_greedy = []
 
