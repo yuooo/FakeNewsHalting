@@ -33,7 +33,7 @@ print "Max total: {}".format(max_total)
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
 tau = 10000
-if len(sys.argv) > 0:
+if len(sys.argv) > 1:
     tau = int(sys.argv[1])
 
 t_max = int(math.ceil(max_total/tau))
@@ -56,7 +56,7 @@ print "Creating the partial sums took {} s.".format(end - start)
 #budgets = np.linspace(1, (n_infections) // t_max, 4)
 #budget = 10
 budgets = [1]
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     budgets = [int(i) for i in sys.argv[2:]]
 res_optimal = []
 res_greedy = []
