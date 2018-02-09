@@ -4,7 +4,9 @@ from main_fake_news_halt import *
 import time
 import math
 import matplotlib.pyplot as plt
+import sys
 
+print()
 #%% LOADING THE DATA - this takes about 10s
 start = time.time()
 is_first_line = True
@@ -32,6 +34,9 @@ print "Max total: {}".format(max_total)
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
 tau = 10000
+if len(sys.argv) > 0:
+    tau = int(sys.argv[0])
+
 t_max = int(math.ceil(max_total/tau))
 print "t_max: {}".format(t_max)
 
