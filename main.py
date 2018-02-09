@@ -35,7 +35,7 @@ print "Max total: {}".format(max_total)
 # We slice the time by intervals of 10min = 600s
 tau = 10000
 if len(sys.argv) > 0:
-    tau = int(sys.argv[0])
+    tau = int(sys.argv[1])
 
 t_max = int(math.ceil(max_total/tau))
 print "t_max: {}".format(t_max)
