@@ -75,6 +75,7 @@ for r in budgets:
     end = time.time()
     print "Greedy Halting took {} s for budget {}.".format(end - start, budget)
     print "Greedy had a gain of: {}, for budget {}.".format(gain_greedy, budget)
+    print "Optimal had a real gain of: {}, for budget {}.".format(ComputeTotal(tab_greedy, Ikt), budget)
     
     res_optimal.append(-gain_optimal)
     res_greedy.append(-gain_greedy)
