@@ -123,6 +123,7 @@ def PopHeapUntilNotChosenAtT(heap, tab_selection, t_curr):
 def OneStepOptimalHalting(sum_infections, budget, t, dico_conflict, 
                           heap_infection, tab_selection, gains, n_infection, t_max):
     PrintEveryN(t, 100)
+    total = 0
     # Compute all gains at time t
     for i_infection in range(n_infection):
         gains[i_infection, t] = Gain(i_infection, t, sum_infections, dico_conflict, 
@@ -138,6 +139,7 @@ def OneStepOptimalHalting(sum_infections, budget, t, dico_conflict,
         # Get best infection to kill
         [val_best_t, n_conflicts_t, i_best_t] = heapq.heappop(heap_infection[t])
         tab_selection[i_best_t] = t
+        total+= val_best_t
         
         
         # Update the table of selected infections to incorporate the conflicts
@@ -161,7 +163,7 @@ def OneStepOptimalHalting(sum_infections, budget, t, dico_conflict,
                 else :
                     heapq.heapreplace(heap_infection[t_1], 
                                       [updated_val, NConflicts(dico_conflict, i_best_t_1, t_1) , i_best_t_1])
-        return val_best_t
+    return total
 
 def OptimalHalting(sum_infections, budget):
     # Init
