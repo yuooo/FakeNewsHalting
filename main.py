@@ -56,6 +56,8 @@ print "Creating the partial sums took {} s.".format(end - start)
 #budgets = np.linspace(1, (n_infections) // t_max, 4)
 #budget = 10
 budgets = [1]
+if len(sys.argv) > 1:
+    budgets = [int(i) for i in sys.argv[2:]]
 res_optimal = []
 res_greedy = []
 
