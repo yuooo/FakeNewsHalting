@@ -31,30 +31,15 @@ print "Max total: {}".format(max_total)
 
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
-tau = 100000
+tau = 10000
 t_max = int(math.ceil(max_total/tau))
 print "t_max: {}".format(t_max)
 
-ikt = np.zeros((n_infections, t_max))
-
-def Slice(data, tau):
-    for i_infection in xrange(n_infections):
-        n_reshare_in_slice = 0
-        i_slice = 1
-        for timestamp in data[i_infection]:
-            if timestamp > i_slice*tau:
-                ikt[i_infection, i_slice - 1] = n_reshare_in_slice
-                i_slice += 1
-                n_reshare_in_slice = 0
-            n_reshare_in_slice += 1
-        ikt[i_infection, i_slice - 1] = n_reshare_in_slice
-    return ikt
-
-#%% 
 start = time.time()
-ikt = Slice(data, tau)
+ikt = Slice(data, tau, t_max)
 end = time.time()
 print "Slicing took {} s.".format(end - start)
+
 
 #%% CREATING THE PARTIAL SUMS
 start = time.time()
@@ -62,15 +47,13 @@ Ikt = CreateSum(ikt)
 end = time.time()
 print "Creating the partial sums took {} s.".format(end - start)
 
-#%%
-#print Ikt[:, 131]
 
 #%%  
-#budgets = np.linspace(1, (n_infections) // t_max, 20)
+#budgets = np.linspace(1, (n_infections) // t_max, 4)
 #budget = 10
 budgets = [1]
-res_optimal = []
-res_greedy = []
+#res_optimal = []
+#res_greedy = []
 
 for r in budgets:
     budget = int(r)
@@ -122,13 +105,4 @@ plt.title("Percent of news exposure avoided for both optimal \n and greedy algor
 plt.ylabel("Percent of news exposure.")
 plt.xlabel("Budget in percent of the news.")
 
-#%%
-
-def ComputeTotal(tab, Ikt):
-    gain = 0
-    for i in range(len(tab)):
-        gain += Ikt[i, tab[i]]
-    return gain
-print ComputeTotal(tab_optimal, Ikt), gain_optimal
-print ComputeTotal(tab_greedy, Ikt), gain_greedy
 
