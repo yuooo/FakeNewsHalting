@@ -6,7 +6,6 @@ import math
 import matplotlib.pyplot as plt
 import sys
 
-print()
 #%% LOADING THE DATA - this takes about 10s
 start = time.time()
 is_first_line = True
@@ -83,31 +82,31 @@ for r in budgets:
 
 #plt.plot(res_greedy)
 #plt.plot(res_optimal)
-plt.close()
-
-diff = [res_optimal[i] - res_greedy[i] for i in range(len(res_greedy))]
-news_killed = [r*t_max*100/n_infections for r in budgets[:len(res_greedy)]]
-
-plt.plot(news_killed, diff)
-plt.title("Difference between the optimal algorithm \nand the greedy baseline as a function of the budget.")
-plt.ylabel("News exposure.")
-plt.xlabel("Budget in percent of the news.")
-
-#%%
-plt.close()
-total_exposure = 0
-for infection in Ikt:
-    total_exposure += infection[0]
-    
-print "total_exposure: {}".format(total_exposure)
-
-opt = [opti*100/total_exposure for opti in res_optimal]
-greed = [greedi*100/total_exposure for greedi in res_greedy]
-
-plt.plot(news_killed, opt, "r")
-plt.plot(news_killed, greed, "b")
-plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
-plt.ylabel("Percent of news exposure.")
-plt.xlabel("Budget in percent of the news.")
-
-
+#plt.close()
+#
+#diff = [res_optimal[i] - res_greedy[i] for i in range(len(res_greedy))]
+#news_killed = [r*t_max*100/n_infections for r in budgets[:len(res_greedy)]]
+#
+#plt.plot(news_killed, diff)
+#plt.title("Difference between the optimal algorithm \nand the greedy baseline as a function of the budget.")
+#plt.ylabel("News exposure.")
+#plt.xlabel("Budget in percent of the news.")
+#
+##%%
+#plt.close()
+#total_exposure = 0
+#for infection in Ikt:
+#    total_exposure += infection[0]
+#    
+#print "total_exposure: {}".format(total_exposure)
+#
+#opt = [opti*100/total_exposure for opti in res_optimal]
+#greed = [greedi*100/total_exposure for greedi in res_greedy]
+#
+#plt.plot(news_killed, opt, "r")
+#plt.plot(news_killed, greed, "b")
+#plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
+#plt.ylabel("Percent of news exposure.")
+#plt.xlabel("Budget in percent of the news.")
+#
+#
