@@ -7,6 +7,7 @@ Created on Wed Dec 20 10:58:49 2017
 
 import heapq
 import numpy as np
+Inf = float('Inf')
 
 #%% Preprocessing functions
 
@@ -29,19 +30,28 @@ def CreateSum(ikt):
     return sum_infection
     
 
-def Slice(data, tau, t_max):
-    n_infections = len(data)
+def Slice(data, tau, t_max, start_time):
+    n_infections = len(data) - 1
+    infty = sum([sum(i) for i in data])
     ikt = np.zeros((n_infections, t_max))
     for i_infection in xrange(n_infections):
         n_reshare_in_slice = 0
         i_slice = 1
+        while i_slice*tau < start_time[i_infection]:
+            ikt[i_infection, i_slice - 1] = -infty
+            i_slice += 1
+            if i_slice > t_max:
+                break
         for timestamp in data[i_infection]:
-            if timestamp > i_slice*tau:
+            if timestamp + start_time[i_infection] > i_slice*tau:
                 ikt[i_infection, i_slice - 1] = n_reshare_in_slice
                 i_slice += 1
                 n_reshare_in_slice = 0
             n_reshare_in_slice += 1
-        ikt[i_infection, i_slice - 1] = n_reshare_in_slice
+            if i_slice > t_max:
+                break
+        if i_slice <= t_max:
+            ikt[i_infection, i_slice - 1] = n_reshare_in_slice
     return ikt
     
 def ComputeTotal(tab, Ikt):

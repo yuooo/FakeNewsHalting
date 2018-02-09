@@ -29,6 +29,11 @@ end = time.time()
 print "Loading took {} s.".format(end - start)
 
 print "Max total: {}".format(max_total)
+print "n_infections", n_infections, len(data)
+
+#%% RANDOM START TIME
+max_start_time = 86400
+start_time = np.random.randint(0, max_start_time, n_infections)
 
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
@@ -36,11 +41,11 @@ tau = 10000
 if len(sys.argv) > 1:
     tau = int(sys.argv[1])
 
-t_max = int(math.ceil(max_total/tau))
+t_max = int(math.ceil((max_start_time + max_total)/tau))
 print "t_max: {}".format(t_max)
 
 start = time.time()
-ikt = Slice(data, tau, t_max)
+ikt = Slice(data, tau, t_max, start_time)
 end = time.time()
 print "Slicing took {} s.".format(end - start)
 
@@ -89,8 +94,8 @@ print "Greedy res:", res_greedy
     
 
 #%% Plot
-#print res_greedy
-#print res_optimal
+#res_greedy = [284063, 776626, 1002569]
+#res_optimal = [308387.0, 808802.0, 1035433.0]
 
 #plt.plot(news_killed, res_greedy)
 #plt.plot(news_killed, res_optimal)
@@ -107,9 +112,7 @@ news_killed = [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
 #
 ##%%
 #plt.close()
-total_exposure = 0
-for infection in Ikt:
-    total_exposure += infection[0]
+total_exposure = sum(ikt[ikt > 0])
     
 print "total_exposure: {}".format(total_exposure)
 
@@ -121,5 +124,6 @@ plt.plot(news_killed, greed, "b", label = "Greedy heuristic")
 plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
 plt.ylabel("Percent of news exposure.")
 plt.xlabel("Budget in percent of the news.")
+plt.legend(bbox_to_anchor=(0.96,0.3))
 plt.show()
 
