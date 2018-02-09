@@ -53,9 +53,9 @@ print "Creating the partial sums took {} s.".format(end - start)
 
 
 #%%  
-#budgets = np.linspace(1, (n_infections) // t_max, 4)
+budgets = np.linspace(1, 0.95*n_infections // t_max, 5)
 #budget = 10
-budgets = [1]
+#budgets = [1]
 if len(sys.argv) > 2:
     budgets = [int(i) for i in sys.argv[2:]]
 res_optimal = []
@@ -79,17 +79,26 @@ for r in budgets:
     
     res_optimal.append(-gain_optimal)
     res_greedy.append(-gain_greedy)
+    
+#    print "Optimal res:", res_optimal    
+#    print "Greedy res:", res_greedy
+#    print "total budget:", [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
+
+print "Optimal res:", res_optimal    
+print "Greedy res:", res_greedy
+    
 
 #%% Plot
 #print res_greedy
 #print res_optimal
 
-#plt.plot(res_greedy)
-#plt.plot(res_optimal)
+#plt.plot(news_killed, res_greedy)
+#plt.plot(news_killed, res_optimal)
+#plt.show()
 #plt.close()
 #
 #diff = [res_optimal[i] - res_greedy[i] for i in range(len(res_greedy))]
-#news_killed = [r*t_max*100/n_infections for r in budgets[:len(res_greedy)]]
+news_killed = [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
 #
 #plt.plot(news_killed, diff)
 #plt.title("Difference between the optimal algorithm \nand the greedy baseline as a function of the budget.")
@@ -98,19 +107,19 @@ for r in budgets:
 #
 ##%%
 #plt.close()
-#total_exposure = 0
-#for infection in Ikt:
-#    total_exposure += infection[0]
-#    
-#print "total_exposure: {}".format(total_exposure)
-#
-#opt = [opti*100/total_exposure for opti in res_optimal]
-#greed = [greedi*100/total_exposure for greedi in res_greedy]
-#
-#plt.plot(news_killed, opt, "r")
-#plt.plot(news_killed, greed, "b")
-#plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
-#plt.ylabel("Percent of news exposure.")
-#plt.xlabel("Budget in percent of the news.")
-#
-#
+total_exposure = 0
+for infection in Ikt:
+    total_exposure += infection[0]
+    
+print "total_exposure: {}".format(total_exposure)
+
+opt = [opti*100.0/total_exposure for opti in res_optimal]
+greed = [greedi*100.0/total_exposure for greedi in res_greedy]
+
+plt.plot(news_killed, opt, "r", label = "Optimal Algorithm")
+plt.plot(news_killed, greed, "b", label = "Greedy heuristic")
+plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
+plt.ylabel("Percent of news exposure.")
+plt.xlabel("Budget in percent of the news.")
+plt.show()
+

@@ -184,49 +184,7 @@ class TestCore(unittest.TestCase):
         for i in range(len(heaps_top)):
             self.assertListEqual(heaps_top[i], heap_infection[t_max - 1 -i][0])
             
-            
-    def testOneStepOptimalHalting_loops(self):
-        sum_infections = np.array([[1, 1, 1, 1, 1],
-                                   [32, 32, 4, 4, 4],
-                                   [16, 16, 16, 3, 3],
-                                   [10, 10, 10, 10, 2], 
-                                   [5, 5, 5, 5, 5],
-                                   [1, 1, 1, 1, 1]])
-        budget = 1
-        t_max = len(sum_infections[0,:])
-        n_infection = len(sum_infections)
-        heap_infection = [[] for _ in range(t_max)]
-        tab_selection = [-1]*n_infection
-        total_gain = 0
-        gains = np.zeros((n_infection, t_max))
-        dico_conflict = {}
-        # t = 4
-        total_gain += OneStepOptimalHalting(sum_infections, budget, 4, dico_conflict, 
-                                            heap_infection, tab_selection, gains, n_infection, t_max)
-        self.assertEqual(total_gain, -5)
-        sol_tab_selection = [-1, -1, -1, -1, 4, -1]
-        self.assertListEqual(tab_selection, sol_tab_selection)
-        heaps_top = [[-4, 0, 1]]
-        for i in range(len(heaps_top)):
-            self.assertListEqual(heaps_top[i], heap_infection[t_max - 1 -i][0])
-        # t = 3
-        total_gain += OneStepOptimalHalting(sum_infections, budget, 3, dico_conflict, 
-                                            heap_infection, tab_selection, gains, n_infection, t_max)
-        self.assertEqual(total_gain, -15)
-        sol_tab_selection = [-1, -1, -1, 3, 4, -1]
-        self.assertListEqual(tab_selection, sol_tab_selection)
-        heaps_top = [[-4, 0, 1], [-4, 0, 1]]
-        for i in range(len(heaps_top)):
-            self.assertListEqual(heaps_top[i], heap_infection[t_max - 1 -i][0])
-        # t = 2
-        total_gain += OneStepOptimalHalting(sum_infections, budget, 2, dico_conflict, 
-                                            heap_infection, tab_selection, gains, n_infection, t_max)
-        self.assertEqual(total_gain, -28)
-        sol_tab_selection = [-1, -1, -1, 3, 4, -1]
-        self.assertListEqual(tab_selection, sol_tab_selection)
-        heaps_top = [[-2, 0, 1], [-2, 0, 1], [-2, 0, 1]]
-        for i in range(len(heaps_top)):
-            self.assertListEqual(heaps_top[i], heap_infection[t_max - 1 -i][0])
+       
         
         
     
