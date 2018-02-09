@@ -95,6 +95,9 @@ def Gain(i_infection, t, sum_infections, dico_conflict, heap_infection, tab_sele
 #        l_conflicts = GetConflicts(dico_conflict, i_infection, t)
 #        i_heap = 0
 #        while heap_infection[t_conflict]
+        if i_infection in GetConflicts(dico_conflict, i_infection, t):
+            print "There is a fucking loop."
+        
         if i_conflict == i_infection:
             [gain_conflict, n_conflict, i_conflict] = heap_infection[t_conflict][1]
         
