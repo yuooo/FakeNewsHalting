@@ -103,36 +103,51 @@ print "Optimal res:", res_optimal
 print "Greedy res:", res_greedy
     
 
-#%% Plot
-#res_greedy = [284063, 776626, 1002569]
-#res_optimal = [308387.0, 808802.0, 1035433.0]
-
-#plt.plot(news_killed, res_greedy)
-#plt.plot(news_killed, res_optimal)
-#plt.show()
-#plt.close()
+##%% Plot
+##res_greedy = [284063, 776626, 1002569]
+##res_optimal = [308387.0, 808802.0, 1035433.0]
 #
-#diff = [res_optimal[i] - res_greedy[i] for i in range(len(res_greedy))]
-news_killed = [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
+##plt.plot(news_killed, res_greedy)
+##plt.plot(news_killed, res_optimal)
+##plt.show()
+##plt.close()
+##
+##diff = [res_optimal[i] - res_greedy[i] for i in range(len(res_greedy))]
+#news_killed = [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
+##
+##plt.plot(news_killed, diff)
+##plt.title("Difference between the optimal algorithm \nand the greedy baseline as a function of the budget.")
+##plt.ylabel("News exposure.")
+##plt.xlabel("Budget in percent of the news.")
+##
+###%%
+##plt.close()
+#total_exposure = sum(ikt[ikt > 0])
+#    
+#print "total_exposure: {}".format(total_exposure)
 #
-#plt.plot(news_killed, diff)
-#plt.title("Difference between the optimal algorithm \nand the greedy baseline as a function of the budget.")
-#plt.ylabel("News exposure.")
+#opt = [opti*100.0/total_exposure for opti in res_optimal]
+#greed = [greedi*100.0/total_exposure for greedi in res_greedy]
+#
+#plt.plot(news_killed, opt, "r", label = "Optimal Algorithm")
+#plt.plot(news_killed, greed, "b", label = "Greedy heuristic")
+#plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
+#plt.ylabel("Percent of news exposure.")
 #plt.xlabel("Budget in percent of the news.")
-#
-##%%
-#plt.close()
-total_exposure = sum(ikt[ikt > 0])
-    
-print "total_exposure: {}".format(total_exposure)
+#plt.legend(bbox_to_anchor=(0.96,0.3))
+#plt.show()
 
-opt = [opti*100.0/total_exposure for opti in res_optimal]
-greed = [greedi*100.0/total_exposure for greedi in res_greedy]
+#%% More plots
+total_exposure = sum(ikt[ikt > 0])
+
+news_killed = [r*t_max*100.0/n_infections for r in budgets[:len(res_greedy)]]
+opt = [res_optimal[i]*100.0/res_greedy[i] for i in range(len(res_greedy))]
+greed = [100]*len(res_greedy)
 
 plt.plot(news_killed, opt, "r", label = "Optimal Algorithm")
 plt.plot(news_killed, greed, "b", label = "Greedy heuristic")
 plt.title("Percent of news exposure avoided for both optimal \n and greedy algorithms as a function of the budget.")
-plt.ylabel("Percent of news exposure.")
+plt.ylabel("Percent of greedy.")
 plt.xlabel("Budget in percent of the news.")
 plt.legend(bbox_to_anchor=(0.96,0.3))
 plt.show()
