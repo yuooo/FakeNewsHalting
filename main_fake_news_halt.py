@@ -32,26 +32,41 @@ def CreateSum(ikt):
 
 def Slice(data, tau, t_max, start_time):
     n_infections = len(data) - 1
-    infty = sum([sum(i) for i in data])
+    infty = 2<<30
     ikt = np.zeros((n_infections, t_max))
+    
     for i_infection in xrange(n_infections):
         n_reshare_in_slice = 0
         i_slice = 1
-        while i_slice*tau < start_time[i_infection]:
+        
+        # Cannot kill an infection before it has started
+        while i_slice*tau <= start_time[i_infection]:
             ikt[i_infection, i_slice - 1] = -infty
             i_slice += 1
             if i_slice > t_max:
                 break
+        # Fill the time slices
         for timestamp in data[i_infection]:
-            if timestamp + start_time[i_infection] > i_slice*tau:
+            real_time = timestamp + start_time[i_infection]
+            # Discard timestamp before t=0
+            if real_time < 0:
+                continue
+            
+            # Keep all the lesftover reshares in the last time step
+            if i_slice == t_max:
+                n_reshare_in_slice += 1
+                continue
+            
+            # Need to change slice
+            if real_time >= i_slice*tau:
                 ikt[i_infection, i_slice - 1] = n_reshare_in_slice
-                i_slice += 1
+                while real_time >= i_slice*tau:
+                    i_slice += 1
+                    if i_slice > t_max - 1:
+                        break
                 n_reshare_in_slice = 0
             n_reshare_in_slice += 1
-            if i_slice > t_max:
-                break
-        if i_slice <= t_max:
-            ikt[i_infection, i_slice - 1] = n_reshare_in_slice
+        ikt[i_infection, i_slice - 1] = n_reshare_in_slice
     return ikt
     
 def ComputeTotal(tab, Ikt):

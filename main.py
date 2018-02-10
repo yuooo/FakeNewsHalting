@@ -31,9 +31,19 @@ print "Loading took {} s.".format(end - start)
 print "Max total: {}".format(max_total)
 print "n_infections", n_infections, len(data)
 
-#%% RANDOM START TIME
-max_start_time = 86400
-start_time = np.random.randint(0, max_start_time, n_infections)
+#%% GENERATING START TIME
+# We spread our news around 5 days, with 3 peaks a day: 7am, 12pm, 6pm. The news 
+# are then generated at a time given by a gaussian with standard deviation one hour,
+# centered on one of these peaks. t=0 is the first day at 7am.
+
+n_seconds_by_day = 3600*24
+peaks = [0, 5*3600, 11*3600]
+peaks_5_days = [peak + i*n_seconds_by_day for peak in peaks for i in range(5)]
+gaussians = 3600*np.random.standard_normal(n_infections)
+
+choose_peak = np.random.randint(0, len(peaks_5_days), n_infections)
+
+start_time = [peaks_5_days[choose_peak[i]] + gaussians[i] for i in range(n_infections)]
 
 #%% SLICING THE DATA
 # We slice the time by intervals of 10min = 600s
@@ -41,7 +51,7 @@ tau = 10000
 if len(sys.argv) > 1:
     tau = int(sys.argv[1])
 
-t_max = int(math.ceil((max_start_time + max_total)/tau))
+t_max = int(math.ceil(5*24*3600/tau))
 print "t_max: {}".format(t_max)
 
 start = time.time()

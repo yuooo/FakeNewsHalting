@@ -203,5 +203,41 @@ class TestCore(unittest.TestCase):
         self.assertEqual(gain, gain_sol)
         self.assertListEqual(tab, tab_sol)
         
+    
+    def testSlice(self):
+        # No start_time
+        data = [[0, 12, 14, 15, 19 , 21],
+                [0, 5, 10, 15, 25, 30],
+                [0, 2, 11, 12, 13],
+                [0, 45, 78],
+                [0, 45, 78, 213, 243, 1000],
+                []]
+        n_infections = len(data) - 1
+        start_time = np.zeros(n_infections)
+        tau = 10
+        
+        ikt1 = Slice(data, tau, 10, start_time)
+        ikt_sol = [[1, 4, 1, 0, 0, 0, 0, 0, 0, 0],
+                   [2, 2, 1, 1, 0, 0, 0, 0, 0, 0],
+                   [2, 3, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [1, 0, 0, 0, 1, 0, 0, 1, 0, 0], 
+                   [1, 0, 0, 0, 1, 0, 0, 1, 0, 3]]
+        
+        for i in range(len(ikt_sol)):           
+            self.assertListEqual(list(ikt1[i]), ikt_sol[i])
+            
+        # With start_time
+        infty = 2<<30
+        start_time2 = [-10, 30, 20, 50, -20]
+        ikt_sol2 = [[4, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [-infty, -infty, -infty, 2, 2, 1, 1, 0, 0, 0],
+                   [-infty, -infty, 2, 3, 0, 0, 0, 0, 0, 0],
+                   [-infty, -infty, -infty, -infty, -infty, 1, 0, 0, 0, 2], 
+                   [0, 0, 1, 0, 0, 1, 0, 0, 0, 3]]
+        ikt2 = Slice(data, tau, 10, start_time2)
+        for i in range(len(ikt_sol2)):  
+            self.assertListEqual(list(ikt2[i]), ikt_sol2[i])
+        
+        
 if __name__ == '__main__':
     unittest.main()
